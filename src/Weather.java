@@ -12,6 +12,26 @@ public class Weather {
         this.icon = icon;
     }
 
+    public double getC()
+    {
+        return c;
+    }
+
+    public double getF()
+    {
+        return f;
+    }
+
+    public String getCondition()
+    {
+        return condition;
+    }
+
+    public String getIcon()
+    {
+        return icon;
+    }
+
     public String toString()
     {
         return "Farenheit: " + f + "\nCelcius: " + c + "\nCondition: " + condition + "\nIcon: " + icon;

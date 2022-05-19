@@ -18,7 +18,7 @@ public class WeatherNetworking {
     public String makeAPICallForCurrentWeather(String zipCode)
     {
         String endPoint = "/current.json";
-        String url = baseUrl + endPoint + "?q=" + zipCode;
+        String url = baseUrl + endPoint + "?q=" + zipCode + "&key=" + apiKey;
 
         try {
             URI myUri = URI.create(url); // creates a URI object from the url string
@@ -42,7 +42,7 @@ public class WeatherNetworking {
         String condition = conditionObj.getString("text");
         String icon = conditionObj.getString("icon");
         icon = "https" + icon;
-        Weather weather = new Weather(f, c, condition, icon);
+        Weather weather = new Weather(c, f, condition, icon);
         return weather;
 
     }
