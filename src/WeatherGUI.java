@@ -3,18 +3,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
-public class WeatherGUI implements ActionListener {
+public class WeatherGUI implements ActionListener, ItemListener {
     private JLabel weatherInfo;
     private JTextField zipEntryField;
     private WeatherNetworking client;
 
     public WeatherGUI()
     {
-        weatherInfo = new JLabel("waiting for zipcode");
+        weatherInfo = new JLabel(" ");
         zipEntryField = new JTextField();
         client = new WeatherNetworking();
         setupGui();
@@ -27,7 +29,7 @@ public class WeatherGUI implements ActionListener {
 
         JLabel welcomeLabel = new JLabel("Current Weather");
         welcomeLabel.setFont(new Font("Helvetica", Font.BOLD, 20));
-        welcomeLabel.setForeground(Color.green);
+        welcomeLabel.setForeground(Color.blue);
 
         JPanel logoWelcomePanel = new JPanel();
         logoWelcomePanel.add(welcomeLabel);
@@ -37,19 +39,23 @@ public class WeatherGUI implements ActionListener {
         zipEntryField = new JTextField(10);
         JButton submitButton = new JButton("Submit");
         JButton clearButton = new JButton("Clear");
+        JCheckBox celsius = new JCheckBox("Show Celsius");
         entryPanel.add(zipLabel);
         entryPanel.add(zipEntryField);
         entryPanel.add(submitButton);
         entryPanel.add(clearButton);
+        entryPanel.add(celsius);
 
         JPanel infoPanel = new JPanel();
         infoPanel.add(weatherInfo);
 
         frame.add(logoWelcomePanel, BorderLayout.NORTH);
-        frame.add(entryPanel, BorderLayout.SOUTH);
+        frame.add(entryPanel, BorderLayout.CENTER);
+        frame.add(infoPanel, BorderLayout.SOUTH);
 
         submitButton.addActionListener(this);
         clearButton.addActionListener(this);
+        celsius.addItemListener(this);
 
         frame.pack();
         frame.setVisible(true);
@@ -61,27 +67,27 @@ public class WeatherGUI implements ActionListener {
         WeatherAPI api = new WeatherAPI();
         Weather weather = api.getCurrentWeather(zip);
 
-        String info = "Temperature: " + weather.getF() + "F"
-                + "       Condition: " + weather.getCondition();
+        String info = "Temperature: " + weather.getF() + "F" + "       Condition: " + weather.getCondition();
+        //weatherInfo.setText(info);
 
-
-        /*
         try {
-            URL imageURL = new URL(weather.getPosterPath());
+            URL imageURL = new URL(weather.getIcon());
             BufferedImage image = ImageIO.read(imageURL);
+            /*
+            ImageIcon img = new ImageIcon("src/placeholder.jpg");
+            Image imageData = img.getImage();
+            Image scaledImage = imageData.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+            img = new ImageIcon(scaledImage);
+            JLabel pictureLabel = new JLabel(img);
 
-            ImageIcon image = new ImageIcon("src/placeholder.jpg");
-        Image imageData = image.getImage();
-        Image scaledImage = imageData.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
-        image = new ImageIcon(scaledImage);
-        JLabel pictureLabel = new JLabel(image);
+             */
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
-
-         */
     }
 
     public void actionPerformed(ActionEvent e) {
-        JButton button = (JButton) (e.getSource());  // cast source to JButton
+        JButton button = (JButton) (e.getSource());
         String text = button.getText();
 
         if (text.equals("Submit"))
