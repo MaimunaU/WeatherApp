@@ -21,7 +21,7 @@ public class WeatherNetworking {
         String url = baseUrl + endPoint + "?q=" + zipCode + "&key=" + apiKey;
 
         try {
-            URI myUri = URI.create(url); // creates a URI object from the url string
+            URI myUri = URI.create(url);
             HttpRequest request = HttpRequest.newBuilder().uri(myUri).build();
             HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
