@@ -41,7 +41,7 @@ public class WeatherNetworking {
         JSONObject conditionObj = currentObj.getJSONObject("condition");
         String condition = conditionObj.getString("text");
         String icon = conditionObj.getString("icon");
-        icon = "https" + icon;
+        icon = "https:" + icon;
         Weather weather = new Weather(c, f, condition, icon);
         return weather;
 

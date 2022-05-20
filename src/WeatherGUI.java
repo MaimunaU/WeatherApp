@@ -13,12 +13,20 @@ public class WeatherGUI implements ActionListener, ItemListener {
     private JLabel weatherInfo;
     private JTextField zipEntryField;
     private WeatherNetworking client;
+    private JLabel pictureLabel;
+    private Weather weather;
 
     public WeatherGUI()
     {
         weatherInfo = new JLabel(" ");
         zipEntryField = new JTextField();
         client = new WeatherNetworking();
+        ImageIcon image = new ImageIcon("src/placeholder.jpg");
+        Image imageData = image.getImage();
+        Image scaledImage = imageData.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+        image = new ImageIcon(scaledImage);
+        pictureLabel = new JLabel(image);
+        weather = new Weather(0.0, 0.0, "", "");
         setupGui();
     }
 
@@ -48,6 +56,7 @@ public class WeatherGUI implements ActionListener, ItemListener {
 
         JPanel infoPanel = new JPanel();
         infoPanel.add(weatherInfo);
+        infoPanel.add(pictureLabel);
 
         frame.add(logoWelcomePanel, BorderLayout.NORTH);
         frame.add(entryPanel, BorderLayout.CENTER);
@@ -65,22 +74,16 @@ public class WeatherGUI implements ActionListener, ItemListener {
     {
         String zip = zipEntryField.getText();
         WeatherAPI api = new WeatherAPI();
-        Weather weather = api.getCurrentWeather(zip);
+        weather = api.getCurrentWeather(zip);
 
         String info = "Temperature: " + weather.getF() + "F" + "       Condition: " + weather.getCondition();
-        //weatherInfo.setText(info);
+        weatherInfo.setText(info);
 
         try {
             URL imageURL = new URL(weather.getIcon());
             BufferedImage image = ImageIO.read(imageURL);
-            /*
-            ImageIcon img = new ImageIcon("src/placeholder.jpg");
-            Image imageData = img.getImage();
-            Image scaledImage = imageData.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
-            img = new ImageIcon(scaledImage);
-            JLabel pictureLabel = new JLabel(img);
-
-             */
+            ImageIcon img = new ImageIcon(image);
+            pictureLabel.setIcon(img);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -99,4 +102,19 @@ public class WeatherGUI implements ActionListener, ItemListener {
             zipEntryField.setText("");
         }
     }
+
+    public void itemStateChanged(ItemEvent e) {
+        JCheckBox checkBox = (JCheckBox) (e.getSource());
+
+        if (checkBox.isSelected())
+        {
+            String info = "Temperature: " + weather.getC() + "C" + "       Condition: " + weather.getCondition();
+            weatherInfo.setText(info);
+        }
+        else
+        {
+            String info = "Temperature: " + weather.getF() + "F" + "       Condition: " + weather.getCondition();
+            weatherInfo.setText(info);
+        }
+    };
 }
